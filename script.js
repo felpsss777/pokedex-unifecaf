@@ -5,17 +5,13 @@
    HTML, CSS e JavaScript puro
 ========================================== */
 
-// ==========================================
 // CONFIGURAÇÕES
-// ==========================================
 
 const API = "https://pokeapi.co/api/v2";
 const TCG_API = "https://api.tcgdex.net/v2/en";
 const POR_PAGINA = 12;
 
-// ==========================================
-// ELEMENTOS DO HTML
-// ==========================================
+// ELEMENTOS HTML
 
 const container = document.querySelector("#pokemon-container");
 const campoBusca = document.querySelector("#pokemon-search");
@@ -30,9 +26,7 @@ const modal = document.querySelector("#pokemon-modal");
 const modalBody = document.querySelector("#modal-body");
 const fecharModalBotao = document.querySelector("#close-modal");
 
-// ==========================================
 // TIPOS DOS POKÉMON
-// ==========================================
 
 const tipos = {
   normal: { nome: "Normal", cor: "#9299a3", fundo: "#f0f1f3" },
@@ -64,14 +58,11 @@ const nomesStats = {
   speed: "Velocidade"
 };
 
-// ==========================================
 // ESTADO DA APLICAÇÃO
-// ==========================================
 
 let catalogo = [];
 let filtrados = [];
 let quantidadeExibida = 0;
-
 let carregando = false;
 let versaoBusca = 0;
 let timerBusca;
@@ -113,9 +104,7 @@ function formatarNumero(numero) {
 function criarElemento(tag, classe = "", texto) {
   const elemento = document.createElement(tag);
 
-  if (classe) {
-    elemento.className = classe;
-  }
+  if (classe) elemento.className = classe;
 
   if (texto !== undefined) {
     elemento.textContent = texto;
@@ -156,10 +145,10 @@ async function buscarPokemon(id) {
 }
 
 // ==========================================
-// IMAGENS E ANIMAÇÕES POKÉMON
+// IMAGENS E ANIMAÇÕES
 // ==========================================
 
-// Arte oficial HD: usada na janela de detalhes.
+// Imagem oficial em alta definição.
 
 function imagemOficialPokemon(pokemon) {
   return (
@@ -170,7 +159,7 @@ function imagemOficialPokemon(pokemon) {
   );
 }
 
-// GIF animado: usado nos cards do catálogo.
+// GIF animado do Pokémon Showdown.
 
 function imagemAnimadaPokemon(pokemon) {
   return (
@@ -179,8 +168,7 @@ function imagemAnimadaPokemon(pokemon) {
   );
 }
 
-// Configura automaticamente a imagem correta.
-// Caso o GIF não exista ou falhe, usa a arte HD.
+// Configura GIF ou imagem oficial.
 
 function configurarImagemPokemon(imagem, pokemon, animar = true) {
   const imagemHD = imagemOficialPokemon(pokemon);
@@ -197,8 +185,9 @@ function configurarImagemPokemon(imagem, pokemon, animar = true) {
     imagem.src = imagemHD;
   }
 
+  // Se o GIF falhar, usa a imagem oficial.
+
   imagem.addEventListener("error", () => {
-    // Impede loop infinito se uma URL falhar.
     if (imagem.dataset.fallback === "1") {
       return;
     }
@@ -208,14 +197,14 @@ function configurarImagemPokemon(imagem, pokemon, animar = true) {
     imagem.classList.remove("pokemon-animado");
     imagem.classList.add("pokemon-estatico");
 
-    if (imagem.src !== imagemHD && imagemHD) {
+    if (imagemHD && imagem.src !== imagemHD) {
       imagem.src = imagemHD;
     }
   });
 }
 
 // ==========================================
-// ETIQUETAS DOS TIPOS
+// TIPOS DOS POKÉMON
 // ==========================================
 
 function criarTipos(pokemon) {
@@ -255,7 +244,7 @@ function criarCard(pokemon) {
     `Ver detalhes de ${formatarNome(pokemon.name)}`
   );
 
-  // Topo do card
+  // Número e ícone
 
   const topo = criarElemento("div", "card-top");
 
@@ -292,7 +281,7 @@ function criarCard(pokemon) {
 
   areaImagem.appendChild(imagem);
 
-  // Nome e tipos
+  // Nome
 
   const nome = criarElemento(
     "h3",
@@ -300,9 +289,43 @@ function criarCard(pokemon) {
     formatarNome(pokemon.name)
   );
 
+  // Tipos
+
   const listaTipos = criarTipos(pokemon);
 
-  // Rodapé
+  // ========================================
+  // NOVO: ALTURA E PESO DENTRO DO CARD
+  // ========================================
+
+  const informacoesCard = criarElemento(
+    "div",
+    "pokemon-card-info"
+  );
+
+  const altura = (pokemon.height / 10)
+    .toLocaleString("pt-BR");
+
+  const peso = (pokemon.weight / 10)
+    .toLocaleString("pt-BR");
+
+  const textoAltura = criarElemento(
+    "span",
+    "",
+    `↕ Altura: ${altura} m`
+  );
+
+  const textoPeso = criarElemento(
+    "span",
+    "",
+    `⚖ Peso: ${peso} kg`
+  );
+
+  informacoesCard.append(
+    textoAltura,
+    textoPeso
+  );
+
+  // Rodapé do card
 
   const rodape = criarElemento("div", "card-bottom");
 
@@ -311,13 +334,18 @@ function criarCard(pokemon) {
     criarElemento("strong", "", "EXPLORAR →")
   );
 
+  // Montagem dinâmica do card
+
   card.append(
     topo,
     areaImagem,
     nome,
     listaTipos,
+    informacoesCard,
     rodape
   );
+
+  // Abrir detalhes
 
   card.addEventListener("click", () => {
     abrirDetalhes(pokemon);
@@ -331,7 +359,8 @@ function criarCard(pokemon) {
 // ==========================================
 
 async function carregarCatalogo() {
-  statusMensagem.textContent = "Carregando catálogo Pokémon...";
+  statusMensagem.textContent =
+    "Carregando catálogo Pokémon...";
 
   try {
     const dados = await consultarAPI(
@@ -418,8 +447,6 @@ async function aplicarFiltros() {
       );
     }
 
-    // Ignora uma pesquisa antiga.
-
     if (minhaVersao !== versaoBusca) {
       return;
     }
@@ -439,9 +466,6 @@ async function aplicarFiltros() {
     }
 
     statusMensagem.textContent = "";
-
-    // Se outro lote ainda estiver em andamento,
-    // sua finalização acionará a busca atual.
 
     if (!carregando) {
       await carregarMais();
@@ -517,9 +541,6 @@ async function carregarMais() {
 
     container.appendChild(fragmento);
 
-    // Avança pelos itens consultados para evitar
-    // repetir indefinidamente um Pokémon com erro.
-
     quantidadeExibida += proximoLote.length;
 
     contador.textContent =
@@ -543,8 +564,6 @@ async function carregarMais() {
     botaoMais.disabled = false;
 
     if (minhaVersao !== versaoBusca) {
-      // Um filtro novo foi aplicado enquanto
-      // a solicitação anterior carregava.
       if (filtrados.length > quantidadeExibida) {
         carregarMais();
       }
@@ -584,7 +603,7 @@ function abrirDetalhes(pokemon) {
 
   modalBody.replaceChildren();
 
-  // Cabeçalho com arte HD
+  // Cabeçalho
 
   const cabecalho = criarElemento(
     "div",
@@ -739,8 +758,7 @@ async function buscarCartasTCG(nomePokemon) {
     carta => carta.image
   );
 
-  // Seleciona até 24 cartas distribuídas
-  // ao longo dos resultados.
+  // Seleção distribuída das cartas.
 
   const limite = 24;
   let candidatas = disponiveis;
@@ -757,7 +775,7 @@ async function buscarCartasTCG(nomePokemon) {
     }
   }
 
-  // Consulta raridades em pequenos lotes.
+  // Consulta raridade.
 
   const cartasDetalhadas = [];
 
@@ -789,7 +807,7 @@ async function buscarCartasTCG(nomePokemon) {
     });
   }
 
-  // Prioridade aproximada de raridades.
+  // Ordenação aproximada por raridade.
 
   function pontuacao(carta) {
     const raridade = (carta.rarity || "").toLowerCase();
@@ -868,8 +886,6 @@ function adicionarGaleriaTCG(pokemon) {
   );
 
   modalBody.appendChild(secao);
-
-  // Clique para consultar TCGdex
 
   botao.addEventListener("click", async () => {
     const minhaConsulta = ++consultaTCGAtual;
@@ -1010,6 +1026,7 @@ function abrirCartaAmpliada(carta) {
 
   visor.setAttribute("role", "dialog");
   visor.setAttribute("aria-modal", "true");
+
   visor.setAttribute(
     "aria-label",
     `Carta ${carta.name}`
@@ -1027,6 +1044,7 @@ function abrirCartaAmpliada(carta) {
   );
 
   fechar.type = "button";
+
   fechar.setAttribute(
     "aria-label",
     "Fechar carta"
@@ -1041,8 +1059,6 @@ function abrirCartaAmpliada(carta) {
 
   imagem.src = imagemCarta(carta, "high");
   imagem.alt = `Carta colecionável ${carta.name}`;
-
-  // Se falhar a imagem HD, tenta a versão leve.
 
   imagem.onerror = () => {
     const alternativa = imagemCarta(carta, "low");
@@ -1096,7 +1112,7 @@ function abrirCartaAmpliada(carta) {
     }
   });
 
-  // Movimento holográfico
+  // Efeito holográfico
 
   cartaVisual.addEventListener("pointermove", evento => {
     if (evento.pointerType !== "mouse") {
@@ -1131,6 +1147,7 @@ function abrirCartaAmpliada(carta) {
 
   cartaVisual.addEventListener("pointerleave", () => {
     cartaVisual.style.transform = "";
+
     cartaVisual.style.setProperty(
       "--shine-x",
       "50%"
@@ -1161,7 +1178,7 @@ function fecharCartaAmpliada() {
 // EVENTOS DO CATÁLOGO
 // ==========================================
 
-// Pesquisa por nome ou número
+// Pesquisa
 
 campoBusca.addEventListener("input", () => {
   clearTimeout(timerBusca);
@@ -1171,7 +1188,7 @@ campoBusca.addEventListener("input", () => {
   }, 350);
 });
 
-// Filtrar por tipo
+// Filtro de tipo
 
 filtroTipo.addEventListener("change", () => {
   clearTimeout(timerBusca);
@@ -1189,7 +1206,7 @@ botaoLimpar.addEventListener("click", () => {
   aplicarFiltros();
 });
 
-// Carregar mais cards
+// Carregar mais
 
 botaoMais.addEventListener(
   "click",
@@ -1211,7 +1228,7 @@ modal.addEventListener("click", evento => {
   }
 });
 
-// Fechar com Escape e navegação por Tab
+// Tecla Escape e navegação por Tab
 
 document.addEventListener("keydown", evento => {
   if (evento.key === "Escape") {
@@ -1270,7 +1287,7 @@ document.addEventListener("keydown", evento => {
 });
 
 // ==========================================
-// INICIALIZAÇÃO DA POKÉDEX
+// INICIALIZAÇÃO
 // ==========================================
 
 carregarCatalogo();

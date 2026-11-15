@@ -1707,3 +1707,33 @@ body {
     transform: none;
   }
 }
+
+/* INFORMAÇÕES ADICIONAIS DOS CARDS */
+
+.pokemon-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #edf3ff;
+  border: 1px solid #dce6fa;
+}
+
+.pokemon-card-info span {
+  color: #435474;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .pokemon-card-info {
+    padding: 10px 8px;
+  }
+
+  .pokemon-card-info span {
+    font-size: 11px;
+  }
+}
