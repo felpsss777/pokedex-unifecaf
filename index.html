@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+
+  <title>Pokédex | UNIFECAF</title>
+  <meta name="description"
+        content="Explore o universo Pokémon em uma Pokédex interativa.">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+
+  <!-- CABEÇALHO -->
+  <header class="header">
+    <div class="header-content">
+
+      <a href="#" class="brand">
+        <span class="brand-ball"></span>
+        <span>POKÉ<span class="brand-accent">DEX</span></span>
+      </a>
+
+      <nav class="navigation" aria-label="Menu principal">
+        <a href="#inicio">Início</a>
+        <a href="#explorar">Explorar</a>
+        <a href="#sobre">Sobre</a>
+      </nav>
+
+      <span class="header-tag">UNIFECAF • 2026</span>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- APRESENTAÇÃO -->
+    <section class="hero" id="inicio">
+      <div class="hero-content">
+
+        <div class="hero-text">
+          <span class="eyebrow">O UNIVERSO POKÉMON</span>
+
+          <h1>
+            Descubra um mundo
+            <span>extraordinário.</span>
+          </h1>
+
+          <p>
+            Explore Pokémon, descubra seus tipos,
+            habilidades e estatísticas.
+            Sua jornada começa aqui.
+          </p>
+
+          <a href="#explorar" class="hero-button">
+            Explorar Pokédex
+            <span aria-hidden="true">↗</span>
+          </a>
+
+          <div class="hero-features">
+            <span>✦ Dados reais</span>
+            <span>✦ PokéAPI</span>
+            <span>✦ Exploração interativa</span>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-glow"></div>
+          <div class="hero-pokeball">
+            <div class="pokeball-middle"></div>
+            <div class="pokeball-button"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ESTATÍSTICAS -->
+    <section class="stats-strip" aria-label="Informações do projeto">
+      <div class="stat-item">
+        <strong id="stat-total">—</strong>
+        <span>Pokémon catalogados</span>
+      </div>
+
+      <div class="stat-item">
+        <strong>18</strong>
+        <span>Tipos de Pokémon</span>
+      </div>
+
+      <div class="stat-item">
+        <strong>100%</strong>
+        <span>Dados via API</span>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="explore-section" id="explorar">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">EXPLORE O CATÁLOGO</span>
+          <h2>Encontre seu Pokémon</h2>
+          <p>
+            Pesquise pelo nome, número ou escolha um tipo.
+          </p>
+        </div>
+
+        <span class="live-badge">
+          <span class="live-dot"></span>
+          DADOS DA API
+        </span>
+      </div>
+
+      <!-- CONTROLES -->
+      <div class="filters-panel">
+
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            id="pokemon-search"
+            placeholder="Ex.: Pikachu, Charizard, 25..."
+            autocomplete="off"
+            aria-label="Pesquisar Pokémon"
+          >
+        </label>
+
+        <select id="type-filter" aria-label="Filtrar por tipo">
+          <option value="all">Todos os tipos</option>
+          <option value="normal">Normal</option>
+          <option value="fire">Fogo</option>
+          <option value="water">Água</option>
+          <option value="electric">Elétrico</option>
+          <option value="grass">Planta</option>
+          <option value="ice">Gelo</option>
+          <option value="fighting">Lutador</option>
+          <option value="poison">Venenoso</option>
+          <option value="ground">Terra</option>
+          <option value="flying">Voador</option>
+          <option value="psychic">Psíquico</option>
+          <option value="bug">Inseto</option>
+          <option value="rock">Pedra</option>
+          <option value="ghost">Fantasma</option>
+          <option value="dragon">Dragão</option>
+          <option value="dark">Sombrio</option>
+          <option value="steel">Aço</option>
+          <option value="fairy">Fada</option>
+        </select>
+
+        <button id="clear-filters" class="clear-button">
+          Limpar filtros
+        </button>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="results-bar">
+        <p id="results-count" aria-live="polite">
+          Preparando Pokédex...
+        </p>
+        <span>POKÉDEX NACIONAL</span>
+      </div>
+
+      <!-- CARDS DINÂMICOS -->
+      <div id="pokemon-container" class="pokemon-grid"
+           aria-live="polite">
+      </div>
+
+      <!-- MENSAGENS -->
+      <p id="status-message" class="status-message"
+         role="status"></p>
+
+      <!-- PAGINAÇÃO -->
+      <div class="load-more-container">
+        <button id="load-more" class="load-more-button"
+                hidden>
+          Carregar mais Pokémon
+          <span aria-hidden="true">↓</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- SOBRE -->
+    <section class="about-section" id="sobre">
+      <div class="about-content">
+        <span class="eyebrow">SOBRE ESTE PROJETO</span>
+        <h2>Uma Pokédex construída com código.</h2>
+
+        <p>
+          Projeto acadêmico desenvolvido para a UNIFECAF
+          utilizando HTML, CSS e JavaScript.
+          As informações são consultadas na PokéAPI
+          e os cards são gerados dinamicamente
+          por meio de manipulação do DOM.
+        </p>
+
+        
+      </div>
+    </section>
+
+  </main>
+
+  <!-- JANELA DE DETALHES -->
+  <div id="pokemon-modal" class="modal" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+
+    <section class="modal-content"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="modal-title"
+             tabindex="-1">
+
+      <button class="modal-close"
+              id="close-modal"
+              aria-label="Fechar detalhes">×</button>
+
+      <div id="modal-body"></div>
+
+    </section>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer class="footer">
+    <div class="footer-content">
+      <strong>POKÉ<span>DEX</span></strong>
+      <p>Projeto acadêmico • UNIFECAF • 2026</p>
+      <p>Dados fornecidos pela PokéAPI</p>
+    </div>
+  </footer>
+
+</body>
+</html>
