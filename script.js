@@ -1,8 +1,7 @@
 
 /* ==========================================
-   POKÉDEX UNIFECAF
-   PokéAPI + Pokémon Showdown + TCGdex
-   HTML, CSS e JavaScript puro
+   POKÉDEX UNIFECAF — JAVASCRIPT FINAL
+   PokéAPI + Showdown + TCGdex
 ========================================== */
 
 // CONFIGURAÇÕES
@@ -11,7 +10,7 @@ const API = "https://pokeapi.co/api/v2";
 const TCG_API = "https://api.tcgdex.net/v2/en";
 const POR_PAGINA = 12;
 
-// ELEMENTOS HTML
+// ELEMENTOS DO HTML
 
 const container = document.querySelector("#pokemon-container");
 const campoBusca = document.querySelector("#pokemon-search");
@@ -26,7 +25,7 @@ const modal = document.querySelector("#pokemon-modal");
 const modalBody = document.querySelector("#modal-body");
 const fecharModalBotao = document.querySelector("#close-modal");
 
-// TIPOS DOS POKÉMON
+// TIPOS
 
 const tipos = {
   normal: { nome: "Normal", cor: "#9299a3", fundo: "#f0f1f3" },
@@ -58,7 +57,7 @@ const nomesStats = {
   speed: "Velocidade"
 };
 
-// ESTADO DA APLICAÇÃO
+// ESTADO
 
 let catalogo = [];
 let filtrados = [];
@@ -104,7 +103,9 @@ function formatarNumero(numero) {
 function criarElemento(tag, classe = "", texto) {
   const elemento = document.createElement(tag);
 
-  if (classe) elemento.className = classe;
+  if (classe) {
+    elemento.className = classe;
+  }
 
   if (texto !== undefined) {
     elemento.textContent = texto;
@@ -114,7 +115,7 @@ function criarElemento(tag, classe = "", texto) {
 }
 
 // ==========================================
-// REQUISIÇÕES À API
+// COMUNICAÇÃO COM A API
 // ==========================================
 
 async function consultarAPI(url) {
@@ -145,10 +146,8 @@ async function buscarPokemon(id) {
 }
 
 // ==========================================
-// IMAGENS E ANIMAÇÕES
+// IMAGENS DOS POKÉMON
 // ==========================================
-
-// Imagem oficial em alta definição.
 
 function imagemOficialPokemon(pokemon) {
   return (
@@ -159,8 +158,6 @@ function imagemOficialPokemon(pokemon) {
   );
 }
 
-// GIF animado do Pokémon Showdown.
-
 function imagemAnimadaPokemon(pokemon) {
   return (
     pokemon.sprites?.other?.showdown?.front_default ||
@@ -168,9 +165,11 @@ function imagemAnimadaPokemon(pokemon) {
   );
 }
 
-// Configura GIF ou imagem oficial.
-
-function configurarImagemPokemon(imagem, pokemon, animar = true) {
+function configurarImagemPokemon(
+  imagem,
+  pokemon,
+  animar = true
+) {
   const imagemHD = imagemOficialPokemon(pokemon);
   const gif = animar ? imagemAnimadaPokemon(pokemon) : null;
 
@@ -185,7 +184,7 @@ function configurarImagemPokemon(imagem, pokemon, animar = true) {
     imagem.src = imagemHD;
   }
 
-  // Se o GIF falhar, usa a imagem oficial.
+  // Se o GIF falhar, utiliza a arte oficial.
 
   imagem.addEventListener("error", () => {
     if (imagem.dataset.fallback === "1") {
@@ -204,7 +203,7 @@ function configurarImagemPokemon(imagem, pokemon, animar = true) {
 }
 
 // ==========================================
-// TIPOS DOS POKÉMON
+// ETIQUETAS DOS TIPOS
 // ==========================================
 
 function criarTipos(pokemon) {
@@ -224,7 +223,11 @@ function criarTipos(pokemon) {
       info.nome
     );
 
-    etiqueta.style.setProperty("--tipo-cor", info.cor);
+    etiqueta.style.setProperty(
+      "--tipo-cor",
+      info.cor
+    );
+
     lista.appendChild(etiqueta);
   });
 
@@ -232,11 +235,15 @@ function criarTipos(pokemon) {
 }
 
 // ==========================================
-// CARDS DINÂMICOS DOS POKÉMON
+// CARDS DINÂMICOS
 // ==========================================
 
 function criarCard(pokemon) {
-  const card = criarElemento("button", "pokemon-card");
+  const card = criarElemento(
+    "button",
+    "pokemon-card"
+  );
+
   card.type = "button";
 
   card.setAttribute(
@@ -244,7 +251,7 @@ function criarCard(pokemon) {
     `Ver detalhes de ${formatarNome(pokemon.name)}`
   );
 
-  // Número e ícone
+  // TOPO
 
   const topo = criarElemento("div", "card-top");
 
@@ -262,11 +269,15 @@ function criarCard(pokemon) {
 
   topo.append(numero, icone);
 
-  // Imagem animada
+  // ÁREA DA IMAGEM
 
-  const areaImagem = criarElemento("div", "image-area");
+  const areaImagem = criarElemento(
+    "div",
+    "image-area"
+  );
 
-  const tipoPrincipal = pokemon.types[0]?.type.name;
+  const tipoPrincipal =
+    pokemon.types[0]?.type.name;
 
   areaImagem.style.setProperty(
     "--type-bg",
@@ -281,7 +292,7 @@ function criarCard(pokemon) {
 
   areaImagem.appendChild(imagem);
 
-  // Nome
+  // NOME
 
   const nome = criarElemento(
     "h3",
@@ -289,13 +300,11 @@ function criarCard(pokemon) {
     formatarNome(pokemon.name)
   );
 
-  // Tipos
+  // TIPOS
 
   const listaTipos = criarTipos(pokemon);
 
-  // ========================================
-  // NOVO: ALTURA E PESO DENTRO DO CARD
-  // ========================================
+  // ALTURA E PESO
 
   const informacoesCard = criarElemento(
     "div",
@@ -325,16 +334,19 @@ function criarCard(pokemon) {
     textoPeso
   );
 
-  // Rodapé do card
+  // RODAPÉ
 
-  const rodape = criarElemento("div", "card-bottom");
+  const rodape = criarElemento(
+    "div",
+    "card-bottom"
+  );
 
   rodape.append(
     criarElemento("span", "", "Ver detalhes"),
     criarElemento("strong", "", "EXPLORAR →")
   );
 
-  // Montagem dinâmica do card
+  // MONTAGEM DO CARD PELO DOM
 
   card.append(
     topo,
@@ -345,7 +357,7 @@ function criarCard(pokemon) {
     rodape
   );
 
-  // Abrir detalhes
+  // EVENTO DE CLIQUE
 
   card.addEventListener("click", () => {
     abrirDetalhes(pokemon);
@@ -367,10 +379,12 @@ async function carregarCatalogo() {
       `${API}/pokemon?limit=1025&offset=0`
     );
 
-    catalogo = dados.results.map((item, indice) => ({
-      id: indice + 1,
-      name: item.name
-    }));
+    catalogo = dados.results.map(
+      (item, indice) => ({
+        id: indice + 1,
+        name: item.name
+      })
+    );
 
     statTotal.textContent = catalogo.length;
 
@@ -382,12 +396,13 @@ async function carregarCatalogo() {
     statusMensagem.textContent =
       "Não foi possível carregar a Pokédex. Atualize a página.";
 
-    contador.textContent = "Erro ao consultar API";
+    contador.textContent =
+      "Erro ao consultar API";
   }
 }
 
 // ==========================================
-// FILTRO POR TIPO
+// BUSCAR POKÉMON POR TIPO
 // ==========================================
 
 async function buscarIdsPorTipo(tipo) {
@@ -405,7 +420,9 @@ async function buscarIdsPorTipo(tipo) {
         .split("/")
         .filter(Boolean);
 
-      return Number(partes[partes.length - 1]);
+      return Number(
+        partes[partes.length - 1]
+      );
     })
   );
 
@@ -425,7 +442,9 @@ async function aplicarFiltros() {
   const tipoSelecionado = filtroTipo.value;
 
   botaoMais.hidden = true;
-  statusMensagem.textContent = "Buscando Pokémon...";
+
+  statusMensagem.textContent =
+    "Buscando Pokémon...";
 
   try {
     let resultado = catalogo.filter(pokemon => {
@@ -439,13 +458,19 @@ async function aplicarFiltros() {
       );
     });
 
-    if (tipoSelecionado !== "all") {
-      const ids = await buscarIdsPorTipo(tipoSelecionado);
+    // FILTRAR POR TIPO
 
-      resultado = resultado.filter(pokemon =>
-        ids.has(pokemon.id)
+    if (tipoSelecionado !== "all") {
+      const ids = await buscarIdsPorTipo(
+        tipoSelecionado
+      );
+
+      resultado = resultado.filter(
+        pokemon => ids.has(pokemon.id)
       );
     }
+
+    // IGNORA RESULTADOS ANTIGOS
 
     if (minhaVersao !== versaoBusca) {
       return;
@@ -462,6 +487,7 @@ async function aplicarFiltros() {
     if (filtrados.length === 0) {
       statusMensagem.textContent =
         "Nenhum Pokémon encontrado. Tente outra busca.";
+
       return;
     }
 
@@ -513,14 +539,17 @@ async function carregarMais() {
 
   try {
     const resultados = await Promise.allSettled(
-      proximoLote.map(item => buscarPokemon(item.id))
+      proximoLote.map(
+        item => buscarPokemon(item.id)
+      )
     );
 
     if (minhaVersao !== versaoBusca) {
       return;
     }
 
-    const fragmento = document.createDocumentFragment();
+    const fragmento =
+      document.createDocumentFragment();
 
     let sucesso = 0;
 
@@ -563,6 +592,8 @@ async function carregarMais() {
     carregando = false;
     botaoMais.disabled = false;
 
+    // RETOMA BUSCA NOVA SE NECESSÁRIO
+
     if (minhaVersao !== versaoBusca) {
       if (filtrados.length > quantidadeExibida) {
         carregarMais();
@@ -577,15 +608,22 @@ async function carregarMais() {
 }
 
 // ==========================================
-// CAIXA DE INFORMAÇÕES
+// CAIXAS DE INFORMAÇÕES
 // ==========================================
 
 function criarInfo(titulo, valor) {
-  const caixa = criarElemento("div", "info-box");
+  const caixa = criarElemento(
+    "div",
+    "info-box"
+  );
 
   caixa.append(
     criarElemento("span", "", titulo),
-    criarElemento("strong", "", String(valor))
+    criarElemento(
+      "strong",
+      "",
+      String(valor)
+    )
   );
 
   return caixa;
@@ -597,13 +635,14 @@ function criarInfo(titulo, valor) {
 
 function abrirDetalhes(pokemon) {
   fecharCartaAmpliada();
+
   consultaTCGAtual++;
 
   ultimoFoco = document.activeElement;
 
   modalBody.replaceChildren();
 
-  // Cabeçalho
+  // CABEÇALHO
 
   const cabecalho = criarElemento(
     "div",
@@ -612,7 +651,11 @@ function abrirDetalhes(pokemon) {
 
   const imagem = document.createElement("img");
 
-  configurarImagemPokemon(imagem, pokemon, false);
+  configurarImagemPokemon(
+    imagem,
+    pokemon,
+    false
+  );
 
   const numero = criarElemento(
     "span",
@@ -635,7 +678,7 @@ function abrirDetalhes(pokemon) {
     criarTipos(pokemon)
   );
 
-  // Informações gerais
+  // INFORMAÇÕES GERAIS
 
   const informacoes = criarElemento(
     "div",
@@ -643,12 +686,20 @@ function abrirDetalhes(pokemon) {
   );
 
   const habilidades = pokemon.abilities
-    .map(item => formatarNome(item.ability.name))
+    .map(item =>
+      formatarNome(item.ability.name)
+    )
     .join(", ");
 
   informacoes.append(
-    criarInfo("Altura", `${pokemon.height / 10} m`),
-    criarInfo("Peso", `${pokemon.weight / 10} kg`),
+    criarInfo(
+      "Altura",
+      `${(pokemon.height / 10).toLocaleString("pt-BR")} m`
+    ),
+    criarInfo(
+      "Peso",
+      `${(pokemon.weight / 10).toLocaleString("pt-BR")} kg`
+    ),
     criarInfo("Habilidades", habilidades),
     criarInfo(
       "Experiência base",
@@ -656,7 +707,7 @@ function abrirDetalhes(pokemon) {
     )
   );
 
-  // Estatísticas
+  // ESTATÍSTICAS
 
   const secaoStats = criarElemento(
     "div",
@@ -664,29 +715,60 @@ function abrirDetalhes(pokemon) {
   );
 
   secaoStats.appendChild(
-    criarElemento("h3", "", "Estatísticas")
+    criarElemento(
+      "h3",
+      "",
+      "Estatísticas"
+    )
   );
 
   pokemon.stats.forEach(item => {
-    const linha = criarElemento("div", "stat-row");
-    const rotulo = criarElemento("div", "stat-label");
-
-    const nomeStat =
-      nomesStats[item.stat.name] || item.stat.name;
-
-    rotulo.append(
-      criarElemento("strong", "", nomeStat),
-      criarElemento("span", "", String(item.base_stat))
+    const linha = criarElemento(
+      "div",
+      "stat-row"
     );
 
-    const trilho = criarElemento("div", "stat-track");
-    const barra = criarElemento("div", "stat-fill");
+    const rotulo = criarElemento(
+      "div",
+      "stat-label"
+    );
+
+    const nomeStat =
+      nomesStats[item.stat.name] ||
+      item.stat.name;
+
+    rotulo.append(
+      criarElemento(
+        "strong",
+        "",
+        nomeStat
+      ),
+      criarElemento(
+        "span",
+        "",
+        String(item.base_stat)
+      )
+    );
+
+    const trilho = criarElemento(
+      "div",
+      "stat-track"
+    );
+
+    const barra = criarElemento(
+      "div",
+      "stat-fill"
+    );
 
     barra.style.width =
       `${Math.min(item.base_stat / 255 * 100, 100)}%`;
 
     trilho.appendChild(barra);
-    linha.append(rotulo, trilho);
+
+    linha.append(
+      rotulo,
+      trilho
+    );
 
     secaoStats.appendChild(linha);
   });
@@ -697,11 +779,12 @@ function abrirDetalhes(pokemon) {
     secaoStats
   );
 
-  // Galeria TCG
+  // GALERIA DE CARTAS TCG
 
   adicionarGaleriaTCG(pokemon);
 
   modal.hidden = false;
+
   document.body.style.overflow = "hidden";
 
   fecharModalBotao.focus();
@@ -713,9 +796,11 @@ function abrirDetalhes(pokemon) {
 
 function fecharModal() {
   fecharCartaAmpliada();
+
   consultaTCGAtual++;
 
   modal.hidden = true;
+
   document.body.style.overflow = "";
 
   if (ultimoFoco?.isConnected) {
@@ -724,7 +809,7 @@ function fecharModal() {
 }
 
 // ==========================================
-// POKÉMON TCG - CARTAS COLECIONÁVEIS
+// CARTAS POKÉMON TCG
 // ==========================================
 
 function imagemCarta(carta, qualidade = "low") {
@@ -758,9 +843,10 @@ async function buscarCartasTCG(nomePokemon) {
     carta => carta.image
   );
 
-  // Seleção distribuída das cartas.
+  // DISTRIBUI CARTAS ENTRE OS RESULTADOS
 
   const limite = 24;
+
   let candidatas = disponiveis;
 
   if (disponiveis.length > limite) {
@@ -768,19 +854,29 @@ async function buscarCartasTCG(nomePokemon) {
 
     for (let i = 0; i < limite; i++) {
       const indice = Math.round(
-        i * (disponiveis.length - 1) / (limite - 1)
+        i * (disponiveis.length - 1) /
+        (limite - 1)
       );
 
-      candidatas.push(disponiveis[indice]);
+      candidatas.push(
+        disponiveis[indice]
+      );
     }
   }
 
-  // Consulta raridade.
+  // CONSULTA RARIDADES
 
   const cartasDetalhadas = [];
 
-  for (let i = 0; i < candidatas.length; i += 4) {
-    const lote = candidatas.slice(i, i + 4);
+  for (
+    let i = 0;
+    i < candidatas.length;
+    i += 4
+  ) {
+    const lote = candidatas.slice(
+      i,
+      i + 4
+    );
 
     const resultados = await Promise.allSettled(
       lote.map(async carta => {
@@ -790,14 +886,18 @@ async function buscarCartasTCG(nomePokemon) {
 
         return {
           ...carta,
-          rarity: dados.rarity || "Raridade não informada"
+          rarity:
+            dados.rarity ||
+            "Raridade não informada"
         };
       })
     );
 
     resultados.forEach((resultado, indice) => {
       if (resultado.status === "fulfilled") {
-        cartasDetalhadas.push(resultado.value);
+        cartasDetalhadas.push(
+          resultado.value
+        );
       } else {
         cartasDetalhadas.push({
           ...lote[indice],
@@ -807,24 +907,34 @@ async function buscarCartasTCG(nomePokemon) {
     });
   }
 
-  // Ordenação aproximada por raridade.
+  // PRIORIZA CARTAS RARAS
 
   function pontuacao(carta) {
-    const raridade = (carta.rarity || "").toLowerCase();
+    const raridade = (
+      carta.rarity || ""
+    ).toLowerCase();
 
-    if (/special illustration|hyper rare/.test(raridade)) {
+    if (
+      /special illustration|hyper rare/.test(raridade)
+    ) {
       return 100;
     }
 
-    if (/illustration rare|secret rare/.test(raridade)) {
+    if (
+      /illustration rare|secret rare/.test(raridade)
+    ) {
       return 90;
     }
 
-    if (/ultra rare|rainbow|shiny/.test(raridade)) {
+    if (
+      /ultra rare|rainbow|shiny/.test(raridade)
+    ) {
       return 80;
     }
 
-    if (/rare holo|holo rare/.test(raridade)) {
+    if (
+      /rare holo|holo rare/.test(raridade)
+    ) {
       return 65;
     }
 
@@ -836,22 +946,32 @@ async function buscarCartasTCG(nomePokemon) {
   }
 
   cartasDetalhadas.sort(
-    (a, b) => pontuacao(b) - pontuacao(a)
+    (a, b) =>
+      pontuacao(b) - pontuacao(a)
   );
 
-  const cartasFinais = cartasDetalhadas.slice(0, 18);
+  const cartasFinais = cartasDetalhadas.slice(
+    0,
+    18
+  );
 
-  cacheCartas.set(chave, cartasFinais);
+  cacheCartas.set(
+    chave,
+    cartasFinais
+  );
 
   return cartasFinais;
 }
 
 // ==========================================
-// GALERIA DE CARTAS NO MODAL
+// GALERIA TCG NO MODAL
 // ==========================================
 
 function adicionarGaleriaTCG(pokemon) {
-  const secao = criarElemento("section", "tcg-section");
+  const secao = criarElemento(
+    "section",
+    "tcg-section"
+  );
 
   const titulo = criarElemento(
     "h3",
@@ -904,7 +1024,11 @@ function adicionarGaleriaTCG(pokemon) {
     );
 
     try {
-      const cartas = await buscarCartasTCG(pokemon.name);
+      const cartas = await buscarCartasTCG(
+        pokemon.name
+      );
+
+      // IGNORA REQUISIÇÕES ANTIGAS
 
       if (
         minhaConsulta !== consultaTCGAtual ||
@@ -953,10 +1077,18 @@ function adicionarGaleriaTCG(pokemon) {
           `Ampliar carta ${carta.name}`
         );
 
-        const imagem = document.createElement("img");
+        const imagem = document.createElement(
+          "img"
+        );
 
-        imagem.src = imagemCarta(carta, "low");
-        imagem.alt = `Carta Pokémon TCG ${carta.name}`;
+        imagem.src = imagemCarta(
+          carta,
+          "low"
+        );
+
+        imagem.alt =
+          `Carta Pokémon TCG ${carta.name}`;
+
         imagem.loading = "lazy";
 
         const nome = criarElemento(
@@ -977,9 +1109,12 @@ function adicionarGaleriaTCG(pokemon) {
           raridade
         );
 
-        botaoCarta.addEventListener("click", () => {
-          abrirCartaAmpliada(carta);
-        });
+        botaoCarta.addEventListener(
+          "click",
+          () => {
+            abrirCartaAmpliada(carta);
+          }
+        );
 
         grade.appendChild(botaoCarta);
       });
@@ -987,7 +1122,10 @@ function adicionarGaleriaTCG(pokemon) {
       galeria.appendChild(grade);
 
     } catch (erro) {
-      console.error("Erro na TCGdex:", erro);
+      console.error(
+        "Erro na TCGdex:",
+        erro
+      );
 
       if (minhaConsulta === consultaTCGAtual) {
         galeria.replaceChildren(
@@ -1005,7 +1143,9 @@ function adicionarGaleriaTCG(pokemon) {
       if (minhaConsulta === consultaTCGAtual) {
         botao.disabled = false;
 
-        if (botao.textContent !== "Tentar novamente") {
+        if (
+          botao.textContent !== "Tentar novamente"
+        ) {
           botao.textContent = "↻ Atualizar galeria";
         }
       }
@@ -1014,7 +1154,7 @@ function adicionarGaleriaTCG(pokemon) {
 }
 
 // ==========================================
-// VISUALIZADOR DE CARTAS
+// VISUALIZADOR DE CARTAS TCG
 // ==========================================
 
 function abrirCartaAmpliada(carta) {
@@ -1022,10 +1162,20 @@ function abrirCartaAmpliada(carta) {
 
   focoAntesVisor = document.activeElement;
 
-  const visor = criarElemento("div", "tcg-viewer");
+  const visor = criarElemento(
+    "div",
+    "tcg-viewer"
+  );
 
-  visor.setAttribute("role", "dialog");
-  visor.setAttribute("aria-modal", "true");
+  visor.setAttribute(
+    "role",
+    "dialog"
+  );
+
+  visor.setAttribute(
+    "aria-modal",
+    "true"
+  );
 
   visor.setAttribute(
     "aria-label",
@@ -1055,13 +1205,25 @@ function abrirCartaAmpliada(carta) {
     "tcg-holo-card"
   );
 
-  const imagem = document.createElement("img");
+  const imagem = document.createElement(
+    "img"
+  );
 
-  imagem.src = imagemCarta(carta, "high");
-  imagem.alt = `Carta colecionável ${carta.name}`;
+  imagem.src = imagemCarta(
+    carta,
+    "high"
+  );
+
+  imagem.alt =
+    `Carta colecionável ${carta.name}`;
+
+  // IMAGEM ALTERNATIVA
 
   imagem.onerror = () => {
-    const alternativa = imagemCarta(carta, "low");
+    const alternativa = imagemCarta(
+      carta,
+      "low"
+    );
 
     if (
       imagem.dataset.fallback !== "1" &&
@@ -1112,53 +1274,63 @@ function abrirCartaAmpliada(carta) {
     }
   });
 
-  // Efeito holográfico
+  // EFEITO HOLOGRÁFICO 3D
 
-  cartaVisual.addEventListener("pointermove", evento => {
-    if (evento.pointerType !== "mouse") {
-      return;
+  cartaVisual.addEventListener(
+    "pointermove",
+    evento => {
+      if (evento.pointerType !== "mouse") {
+        return;
+      }
+
+      if (
+        window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+      ) {
+        return;
+      }
+
+      const rect =
+        cartaVisual.getBoundingClientRect();
+
+      const x =
+        (evento.clientX - rect.left) /
+        rect.width;
+
+      const y =
+        (evento.clientY - rect.top) /
+        rect.height;
+
+      cartaVisual.style.transform =
+        `perspective(900px) ` +
+        `rotateY(${(x - 0.5) * 18}deg) ` +
+        `rotateX(${(0.5 - y) * 18}deg)`;
+
+      cartaVisual.style.setProperty(
+        "--shine-x",
+        `${x * 100}%`
+      );
     }
+  );
 
-    if (
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches
-    ) {
-      return;
+  cartaVisual.addEventListener(
+    "pointerleave",
+    () => {
+      cartaVisual.style.transform = "";
+
+      cartaVisual.style.setProperty(
+        "--shine-x",
+        "50%"
+      );
     }
-
-    const rect = cartaVisual.getBoundingClientRect();
-
-    const x =
-      (evento.clientX - rect.left) / rect.width;
-
-    const y =
-      (evento.clientY - rect.top) / rect.height;
-
-    cartaVisual.style.transform =
-      `perspective(900px) rotateY(${(x - 0.5) * 18}deg) ` +
-      `rotateX(${(0.5 - y) * 18}deg)`;
-
-    cartaVisual.style.setProperty(
-      "--shine-x",
-      `${x * 100}%`
-    );
-  });
-
-  cartaVisual.addEventListener("pointerleave", () => {
-    cartaVisual.style.transform = "";
-
-    cartaVisual.style.setProperty(
-      "--shine-x",
-      "50%"
-    );
-  });
+  );
 
   fechar.focus();
 }
 
 // ==========================================
-// FECHAR VISUALIZADOR TCG
+// FECHAR CARTA TCG
 // ==========================================
 
 function fecharCartaAmpliada() {
@@ -1178,7 +1350,7 @@ function fecharCartaAmpliada() {
 // EVENTOS DO CATÁLOGO
 // ==========================================
 
-// Pesquisa
+// PESQUISAR POKÉMON
 
 campoBusca.addEventListener("input", () => {
   clearTimeout(timerBusca);
@@ -1188,14 +1360,14 @@ campoBusca.addEventListener("input", () => {
   }, 350);
 });
 
-// Filtro de tipo
+// FILTRAR POR TIPO
 
 filtroTipo.addEventListener("change", () => {
   clearTimeout(timerBusca);
   aplicarFiltros();
 });
 
-// Limpar filtros
+// LIMPAR FILTROS
 
 botaoLimpar.addEventListener("click", () => {
   clearTimeout(timerBusca);
@@ -1206,7 +1378,7 @@ botaoLimpar.addEventListener("click", () => {
   aplicarFiltros();
 });
 
-// Carregar mais
+// CARREGAR MAIS
 
 botaoMais.addEventListener(
   "click",
@@ -1214,7 +1386,7 @@ botaoMais.addEventListener(
 );
 
 // ==========================================
-// EVENTOS DOS MODAIS
+// EVENTOS DO MODAL
 // ==========================================
 
 fecharModalBotao.addEventListener(
@@ -1223,68 +1395,80 @@ fecharModalBotao.addEventListener(
 );
 
 modal.addEventListener("click", evento => {
-  if (evento.target.dataset.close === "true") {
+  if (
+    evento.target.dataset.close === "true"
+  ) {
     fecharModal();
   }
 });
 
-// Tecla Escape e navegação por Tab
+// ==========================================
+// TECLADO — ESCAPE E TAB
+// ==========================================
 
-document.addEventListener("keydown", evento => {
-  if (evento.key === "Escape") {
-    if (visorTCG) {
-      fecharCartaAmpliada();
-    } else if (!modal.hidden) {
-      fecharModal();
+document.addEventListener(
+  "keydown",
+  evento => {
+    if (evento.key === "Escape") {
+      if (visorTCG) {
+        fecharCartaAmpliada();
+      } else if (!modal.hidden) {
+        fecharModal();
+      }
+
+      return;
     }
 
-    return;
+    if (evento.key !== "Tab") {
+      return;
+    }
+
+    const janelaAtiva =
+      visorTCG ||
+      (
+        !modal.hidden
+          ? modal.querySelector(".modal-content")
+          : null
+      );
+
+    if (!janelaAtiva) {
+      return;
+    }
+
+    const focaveis = [
+      ...janelaAtiva.querySelectorAll(
+        'button:not(:disabled):not([hidden]), a[href], input:not(:disabled)'
+      )
+    ].filter(
+      elemento =>
+        elemento.getClientRects().length > 0
+    );
+
+    if (focaveis.length === 0) {
+      return;
+    }
+
+    const primeiro = focaveis[0];
+    const ultimo = focaveis[
+      focaveis.length - 1
+    ];
+
+    if (
+      evento.shiftKey &&
+      document.activeElement === primeiro
+    ) {
+      evento.preventDefault();
+      ultimo.focus();
+
+    } else if (
+      !evento.shiftKey &&
+      document.activeElement === ultimo
+    ) {
+      evento.preventDefault();
+      primeiro.focus();
+    }
   }
-
-  if (evento.key !== "Tab") {
-    return;
-  }
-
-  const janelaAtiva =
-    visorTCG ||
-    (!modal.hidden
-      ? modal.querySelector(".modal-content")
-      : null);
-
-  if (!janelaAtiva) {
-    return;
-  }
-
-  const focaveis = [
-    ...janelaAtiva.querySelectorAll(
-      'button:not(:disabled):not([hidden]), a[href], input:not(:disabled)'
-    )
-  ].filter(elemento =>
-    elemento.getClientRects().length > 0
-  );
-
-  if (focaveis.length === 0) {
-    return;
-  }
-
-  const primeiro = focaveis[0];
-  const ultimo = focaveis[focaveis.length - 1];
-
-  if (
-    evento.shiftKey &&
-    document.activeElement === primeiro
-  ) {
-    evento.preventDefault();
-    ultimo.focus();
-
-  } else if (
-    !evento.shiftKey &&
-    document.activeElement === ultimo
-  ) {
-    evento.preventDefault();
-    primeiro.focus();
-  }
-});
+);
 
 // ==========================================
 // INICIALIZAÇÃO
